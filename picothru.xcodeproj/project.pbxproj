@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DFB00C6219C883BB00ABC566 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB00C6119C883BB00ABC566 /* Entity.m */; };
 		DFBBE26319BF7228007F65AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBE26219BF7228007F65AD /* Foundation.framework */; };
 		DFBBE26519BF7228007F65AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBE26419BF7228007F65AD /* CoreGraphics.framework */; };
 		DFBBE26719BF7228007F65AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBE26619BF7228007F65AD /* UIKit.framework */; };
@@ -30,7 +31,6 @@
 		DFCE222819C0D39B00BF4128 /* ListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DFCE222619C0D39B00BF4128 /* ListTableViewCell.m */; };
 		DFCE222919C0D39B00BF4128 /* ListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFCE222719C0D39B00BF4128 /* ListTableViewCell.xib */; };
 		DFCE224C19C283F700BF4128 /* CardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFCE224B19C283F700BF4128 /* CardViewController.m */; };
-		DFCE224F19C28D1C00BF4128 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = DFCE224E19C28D1C00BF4128 /* Entity.m */; };
 		DFCE225219C28D1D00BF4128 /* Payment.m in Sources */ = {isa = PBXBuildFile; fileRef = DFCE225119C28D1D00BF4128 /* Payment.m */; };
 		EA0F5B8A4738406C8C238B77 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C268A5914B1410D972E7F91 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -48,6 +48,8 @@
 /* Begin PBXFileReference section */
 		5C268A5914B1410D972E7F91 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6FBF0D2410B4458AA23746D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		DFB00C6019C883BB00ABC566 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = ../Pods/Entity.h; sourceTree = "<group>"; };
+		DFB00C6119C883BB00ABC566 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Entity.m; path = ../Pods/Entity.m; sourceTree = "<group>"; };
 		DFBBE25F19BF7228007F65AD /* picothru.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = picothru.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFBBE26219BF7228007F65AD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DFBBE26419BF7228007F65AD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -68,7 +70,7 @@
 		DFBBE28C19BF7229007F65AD /* picothruTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "picothruTests-Info.plist"; sourceTree = "<group>"; };
 		DFBBE28E19BF7229007F65AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DFBBE29019BF7229007F65AD /* picothruTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = picothruTests.m; sourceTree = "<group>"; };
-		DFBBE29A19BF724B007F65AD /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		DFBBE29A19BF724B007F65AD /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DFCE220F19C056CE00BF4128 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		DFCE221119C06F0700BF4128 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		DFCE221319C0BA9800BF4128 /* ConTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConTableViewController.h; sourceTree = "<group>"; };
@@ -79,8 +81,6 @@
 		DFCE222719C0D39B00BF4128 /* ListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListTableViewCell.xib; sourceTree = "<group>"; };
 		DFCE224A19C283F700BF4128 /* CardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardViewController.h; sourceTree = "<group>"; };
 		DFCE224B19C283F700BF4128 /* CardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardViewController.m; sourceTree = "<group>"; };
-		DFCE224D19C28D1C00BF4128 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
-		DFCE224E19C28D1C00BF4128 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
 		DFCE225019C28D1D00BF4128 /* Payment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Payment.h; sourceTree = "<group>"; };
 		DFCE225119C28D1D00BF4128 /* Payment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Payment.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,10 +150,10 @@
 		DFBBE26819BF7228007F65AD /* picothru */ = {
 			isa = PBXGroup;
 			children = (
-				DFCE224D19C28D1C00BF4128 /* Entity.h */,
-				DFCE224E19C28D1C00BF4128 /* Entity.m */,
 				DFCE225019C28D1D00BF4128 /* Payment.h */,
 				DFCE225119C28D1D00BF4128 /* Payment.m */,
+				DFB00C6019C883BB00ABC566 /* Entity.h */,
+				DFB00C6119C883BB00ABC566 /* Entity.m */,
 				DFCE221919C0BCD700BF4128 /* picothru.xcdatamodeld */,
 				DFCE222719C0D39B00BF4128 /* ListTableViewCell.xib */,
 				DFBBE27119BF7228007F65AD /* AppDelegate.h */,
@@ -338,13 +338,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFCE224F19C28D1C00BF4128 /* Entity.m in Sources */,
 				DFCE224C19C283F700BF4128 /* CardViewController.m in Sources */,
 				DFBBE27C19BF7228007F65AD /* ViewController.m in Sources */,
 				DFCE225219C28D1D00BF4128 /* Payment.m in Sources */,
 				DFBBE27319BF7228007F65AD /* AppDelegate.m in Sources */,
 				DFCE221B19C0BCD700BF4128 /* picothru.xcdatamodeld in Sources */,
 				DFCE222819C0D39B00BF4128 /* ListTableViewCell.m in Sources */,
+				DFB00C6219C883BB00ABC566 /* Entity.m in Sources */,
 				DFCE221519C0BA9800BF4128 /* ConTableViewController.m in Sources */,
 				DFBBE26F19BF7228007F65AD /* main.m in Sources */,
 			);

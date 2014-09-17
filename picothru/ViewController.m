@@ -87,6 +87,16 @@ NSMutableArray *prodactprice;
     [self.view bringSubviewToFront:_highlightView];
     [self.view bringSubviewToFront:_label];
     
+    NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=4903326112852"];
+    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+    Scanitems *scanitems = [Scanitems MR_createEntity];
+    NSLog(@"%@",array);
+    scanitems.prodacts = response;
+    scanitems.names = [array valueForKeyPath:@"name"];
+    scanitems.prices = [array valueForKeyPath:@"price"];
+    _label.text = [array valueForKeyPath:@"name"];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
@@ -111,12 +121,12 @@ NSMutableArray *prodactprice;
         
         if (detectionString != nil)
         {
-            NSString *url=[NSString stringWithFormat:@"http://hoge?%@",detectionString];
+            NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
             NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
             NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
             NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
             Scanitems *scanitems = [Scanitems MR_createEntity];
-            scanitems.prodacts = array;
+            scanitems.prodacts = response;
             scanitems.names = [array valueForKeyPath:@"name"];
             scanitems.prices = [array valueForKeyPath:@"price"];
             _label.text = [array valueForKeyPath:@"name"];
@@ -130,7 +140,6 @@ NSMutableArray *prodactprice;
 }
 
 -(void)hoge:(UIButton*)button{
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     //Scanitems* scanitems = [Scanitems MR_createEntity];
     //NSData *itemsData = [NSKeyedArchiver archivedDataWithRootObject:items];
     //NSData *nameData = [NSKeyedArchiver archivedDataWithRootObject:prodactname];
@@ -138,6 +147,7 @@ NSMutableArray *prodactprice;
     //scanitems.prodacts = itemsData;
     //scanitems.names = nameData;
     //scanitems.prices = priceData;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     [context MR_saveNestedContexts];
     
     ConTableViewController *conTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ctv"];
