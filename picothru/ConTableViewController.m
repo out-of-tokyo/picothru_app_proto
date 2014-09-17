@@ -23,7 +23,7 @@
 NSArray *list;
 NSArray *names;
 NSArray *prices;
-NSInteger *total;
+NSInteger total;
 NSArray *cardinfo;
 NSString *tokenid;
 int i;
@@ -87,14 +87,18 @@ int i;
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-      [self.tableView registerNib:[UINib nibWithNibName:@"ListTableViewCell" bundle:nil]forCellReuseIdentifier:@"cell"];
-    }
+	[self.tableView registerNib:[UINib nibWithNibName:@"ListTableViewCell" bundle:nil]forCellReuseIdentifier:@"cell"];
+}
 
 -(void)viewDidAppear:(BOOL)animated
 {
+	total = 0;
+	NSLog(@"prices count = %ld",(long)[prices count]);
     for(i = 0;i < [prices count]; i++) {
         
         NSInteger tmp = [prices[i] intValue];
+		NSLog(@"tmp = %ld (i = %ld)",(long)tmp,(long)i);
+		NSLog(@"%ld + %ld = %ld",(long)total,(long)tmp,(long)(total+tmp));
         total += tmp;
     }
     
@@ -105,10 +109,11 @@ int i;
     goukei.textColor = [UIColor whiteColor];
     goukei.textAlignment = NSTextAlignmentCenter;
     NSString *txt = [NSString stringWithFormat:@"%ld", (long)total];
+	NSLog(@"%ld",(long)total);
     NSString *totaltxt = [NSString stringWithFormat:@"合計%@円",txt];
     goukei.text = totaltxt ;
     [self.view addSubview: goukei];
-
+	
 }
 - (void)didReceiveMemoryWarning
 {
@@ -151,18 +156,18 @@ int i;
 
 -(void)done:(UIButton*)button{
     /*id delegate = [[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = [delegate managedObjectContext];
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSFetchRequest *fetchrequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *d = [NSEntityDescription entityForName: @"Payment" inManagedObjectContext:_managedObjectContext];
-    [fetchrequest setEntity:d];
-    NSError *error = nil;
-    cardinfo = [moc executeFetchRequest:fetchrequest error:&error];
-    if([cardinfo valueForKeyPath:@"name"], [cardinfo valueForKeyPath:@"number"],[cardinfo valueForKeyPath:@"month"], [cardinfo valueForKeyPath:@"year"],[cardinfo valueForKeyPath:@"cvc"] ){
-        ;
-        }
-    CardViewController *CardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
-    [self presentViewController:CardViewController animated:YES completion:nil];*/
+	 self.managedObjectContext = [delegate managedObjectContext];
+	 NSManagedObjectContext *moc = [self managedObjectContext];
+	 NSFetchRequest *fetchrequest = [[NSFetchRequest alloc] init];
+	 NSEntityDescription *d = [NSEntityDescription entityForName: @"Payment" inManagedObjectContext:_managedObjectContext];
+	 [fetchrequest setEntity:d];
+	 NSError *error = nil;
+	 cardinfo = [moc executeFetchRequest:fetchrequest error:&error];
+	 if([cardinfo valueForKeyPath:@"name"], [cardinfo valueForKeyPath:@"number"],[cardinfo valueForKeyPath:@"month"], [cardinfo valueForKeyPath:@"year"],[cardinfo valueForKeyPath:@"cvc"] ){
+	 ;
+	 }
+	 CardViewController *CardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
+	 [self presentViewController:CardViewController animated:YES completion:nil];*/
     [self createtoken];
     [self posttoken];
 }
@@ -185,7 +190,7 @@ int i;
             NSLog(@"error:%@", [error localizedDescription]);
         }
     }];
-
+	
 }
 
 - (void)posttoken{
@@ -214,7 +219,7 @@ int i;
         [[UIAlertView alloc] initWithTitle:@"PicoNothru" message:@"エラー" delegate:self cancelButtonTitle:@"確認" otherButtonTitles:nil];
         [alert show];
     }
-
+	
 }
 
 /*
