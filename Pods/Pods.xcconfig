@@ -1,5 +1,0 @@
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/MagicalRecord" "${PODS_ROOT}/Headers/WebPay" "${PODS_ROOT}/Headers/ZXingObjC"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers" -isystem "${PODS_ROOT}/Headers/MagicalRecord" -isystem "${PODS_ROOT}/Headers/WebPay" -isystem "${PODS_ROOT}/Headers/ZXingObjC"
-OTHER_LDFLAGS = -ObjC -framework AVFoundation -framework CoreData -framework CoreGraphics -framework CoreMedia -framework CoreVideo -framework Foundation -framework ImageIO -framework QuartzCore -framework UIKit
-PODS_ROOT = ${SRCROOT}/Pods
