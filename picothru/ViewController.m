@@ -61,7 +61,7 @@ NSMutableArray *prodactprice;
     
     
     
-    
+    //カメラ起動してなんかやってる
     _session = [[AVCaptureSession alloc] init];
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     NSError *error = nil;
@@ -88,64 +88,112 @@ NSMutableArray *prodactprice;
     
     [self.view bringSubviewToFront:_highlightView];
     [self.view bringSubviewToFront:_label];
-    
+	
+
+
+    //バーコード値を投げてデータを格納
     NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=4903326112852"];
     NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-    Scanitems *scanitems = [Scanitems MR_createEntity];
-//	[array arrayByAddingObject:@"1"];
+    
+	
+
     NSLog(@"array = %@",array);
-//	scanitems.number = ;
+
+	Scanitems *scanitems = [Scanitems MR_createEntity];
     scanitems.prodacts = response;
-	NSLog(@"scanitems.number = %@",scanitems.number);
     scanitems.names = [array valueForKeyPath:@"name"];
     scanitems.prices = [array valueForKeyPath:@"price"];
-//    _label.text = [array valueForKeyPath:@"name"];
-//    _label.text = [[array valueForKeyPath:@"price"] stringValue];
+	scanitems.number = [NSNumber numberWithInt:1];;
+
+	//値の代入
+	NSLog(@"scanitems.number = %@",scanitems.number);
+	NSLog(@"scanitems.prices = %@",scanitems.prices);
+	
+	
+	//ラベルの変更
+//	_label.text = [array valueForKeyPath:@"name"];
+//	_label.text = [[array valueForKeyPath:@"price"] stringValue];
 //	_label.text = [[array valueForKeyPath:@"number"] stringValue];
-	_label.text = [NSString stringWithFormat:@"%@ %@円",[array valueForKeyPath:@"name"],[[array valueForKeyPath:@"price"] stringValue]];
+//	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点",scanitems.names,[scanitems.prices stringValue], [scanitems.number stringValue]];
+
+	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_saveNestedContexts];
+	
+	//Coredata呼び出し
+	id delegate = [[UIApplication sharedApplication] delegate];
+	self.managedObjectContext = [delegate managedObjectContext];
+	NSManagedObjectContext *moc = [self managedObjectContext];
+	NSFetchRequest *fetchrequest = [[NSFetchRequest alloc] init];
+	NSEntityDescription *d = [NSEntityDescription entityForName: @"Scanitems" inManagedObjectContext:_managedObjectContext];
+	[fetchrequest setEntity:d];
+    NSError *error_coredata = nil;
+	
+	//呼び出したCoredata格納
+	NSArray *list;
+    list = [moc executeFetchRequest:fetchrequest error:&error_coredata];
+	
+	//呼び出したCoredata分割格納
+	NSString *names = [[list valueForKeyPath:@"names"]objectAtIndex:1];
+	NSString *prices = [[list valueForKeyPath:@"prices"]objectAtIndex:1];
+	
+	NSLog(@"names: %@",names);
+	NSLog(@"prices: %@",prices);
+
+	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点",names,prices, [scanitems.number stringValue]];
+
+
 }
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
-    CGRect highlightViewRect = CGRectZero;
-    AVMetadataMachineReadableCodeObject *barCodeObject;
-    NSString *detectionString = nil;
-    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
-                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
-                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
-    
-    for (AVMetadataObject *metadata in metadataObjects) {
-        for (NSString *type in barCodeTypes) {
-            if ([metadata.type isEqualToString:type])
-            {
-                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
-                highlightViewRect = barCodeObject.bounds;
-                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
-                break;
-            }
-        }
-        
-        if (detectionString != nil)
-        {
-            NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
-            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-            Scanitems *scanitems = [Scanitems MR_createEntity];
-            scanitems.prodacts = response;
-            scanitems.names = [array valueForKeyPath:@"name"];
-            scanitems.prices = [array valueForKeyPath:@"price"];
-            _label.text = [array valueForKeyPath:@"name"];
-            break;
-        }
-        else
-            _label.text = @"(none)";
-    }
-    
-    _highlightView.frame = highlightViewRect;
-}
+
+
+
+
+
+
+
+
+
+//- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+//{
+//    CGRect highlightViewRect = CGRectZero;
+//    AVMetadataMachineReadableCodeObject *barCodeObject;
+//    NSString *detectionString = nil;
+//    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
+//                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
+//                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
+//    
+//    for (AVMetadataObject *metadata in metadataObjects) {
+//        for (NSString *type in barCodeTypes) {
+//            if ([metadata.type isEqualToString:type])
+//            {
+//                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
+//                highlightViewRect = barCodeObject.bounds;
+//                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
+//                break;
+//            }
+//        }
+//        
+//        if (detectionString != nil)
+//        {
+//            NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
+//            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+//            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+//            Scanitems *scanitems = [Scanitems MR_createEntity];
+//            scanitems.prodacts = response;
+//            scanitems.names = [array valueForKeyPath:@"name"];
+//            scanitems.prices = [array valueForKeyPath:@"price"];
+//            _label.text = [array valueForKeyPath:@"name"];
+//            break;
+//        }
+//        else
+//            _label.text = @"(none)";
+//    }
+//    
+//    _highlightView.frame = highlightViewRect;
+//}
 
 -(void)hoge:(UIButton*)button{
     //Scanitems* scanitems = [Scanitems MR_createEntity];
@@ -155,8 +203,6 @@ NSMutableArray *prodactprice;
     //scanitems.prodacts = itemsData;
     //scanitems.names = nameData;
     //scanitems.prices = priceData;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_saveNestedContexts];
     
     ConTableViewController *conTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ctv"];
     [self presentViewController:conTableViewController animated:YES completion:nil];
