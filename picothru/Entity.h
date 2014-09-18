@@ -10,11 +10,11 @@
 #import <CoreData/CoreData.h>
 
 
-@interface Entity : NSManagedObject
+@interface Scanitems : NSManagedObject
 
 @property (nonatomic, retain) NSString * names;
+@property (nonatomic, retain) NSNumber * number;
 @property (nonatomic, retain) NSNumber * prices;
 @property (nonatomic, retain) NSData * prodacts;
-@property (nonatomic, retain) NSNumber * number;
 
 @end

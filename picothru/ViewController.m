@@ -96,7 +96,7 @@ NSMutableArray *prodactprice;
     Scanitems *scanitems = [Scanitems MR_createEntity];
 //	[array arrayByAddingObject:@"1"];
     NSLog(@"array = %@",array);
-	scanitems.number = 3;
+//	scanitems.number = ;
     scanitems.prodacts = response;
 	NSLog(@"scanitems.number = %@",scanitems.number);
     scanitems.names = [array valueForKeyPath:@"name"];

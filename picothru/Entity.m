@@ -9,11 +9,11 @@
 #import "Entity.h"
 
 
-@implementation Entity
+@implementation Scanitems
 
 @dynamic names;
+@dynamic number;
 @dynamic prices;
 @dynamic prodacts;
-@dynamic number;
 
 @end
