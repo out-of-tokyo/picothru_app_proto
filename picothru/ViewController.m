@@ -38,6 +38,7 @@ NSMutableArray *prodactprice;
     _highlightView.layer.borderWidth = 3;
     [self.view addSubview:_highlightView];
     
+	// スキャン履歴表示ラベル
     _label = [[UILabel alloc] init];
     _label.frame = CGRectMake(0, self.view.bounds.size.height - 120, self.view.bounds.size.width, 40);
     _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -46,7 +47,8 @@ NSMutableArray *prodactprice;
     _label.textAlignment = NSTextAlignmentCenter;
     _label.text = @"(none)";
     [self.view addSubview:_label];
-    
+	
+    // 会計終了ボタン
     _button = [[UIButton alloc] init];
     _button.frame = CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80);
     _button.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -92,11 +94,17 @@ NSMutableArray *prodactprice;
     NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
     Scanitems *scanitems = [Scanitems MR_createEntity];
-    NSLog(@"%@",array);
+//	[array arrayByAddingObject:@"1"];
+    NSLog(@"array = %@",array);
+	scanitems.number = 3;
     scanitems.prodacts = response;
+	NSLog(@"scanitems.number = %@",scanitems.number);
     scanitems.names = [array valueForKeyPath:@"name"];
     scanitems.prices = [array valueForKeyPath:@"price"];
-    _label.text = [array valueForKeyPath:@"name"];
+//    _label.text = [array valueForKeyPath:@"name"];
+//    _label.text = [[array valueForKeyPath:@"price"] stringValue];
+//	_label.text = [[array valueForKeyPath:@"number"] stringValue];
+	_label.text = [NSString stringWithFormat:@"%@ %@円",[array valueForKeyPath:@"name"],[[array valueForKeyPath:@"price"] stringValue]];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection

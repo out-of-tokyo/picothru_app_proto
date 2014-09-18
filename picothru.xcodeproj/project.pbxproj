@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA09432219CA94B200F065D8 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = AA09432119CA94B200F065D8 /* Entity.m */; };
 		DFB00C6219C883BB00ABC566 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB00C6119C883BB00ABC566 /* Entity.m */; };
 		DFBBE26319BF7228007F65AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBE26219BF7228007F65AD /* Foundation.framework */; };
 		DFBBE26519BF7228007F65AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBBE26419BF7228007F65AD /* CoreGraphics.framework */; };
@@ -47,6 +48,9 @@
 
 /* Begin PBXFileReference section */
 		5C268A5914B1410D972E7F91 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA09432019CA94B200F065D8 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		AA09432119CA94B200F065D8 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
+		AA09432319CA958B00F065D8 /* picothru 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "picothru 2.xcdatamodel"; sourceTree = "<group>"; };
 		C6FBF0D2410B4458AA23746D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		DFB00C6019C883BB00ABC566 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = ../Pods/Entity.h; sourceTree = "<group>"; };
 		DFB00C6119C883BB00ABC566 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Entity.m; path = ../Pods/Entity.m; sourceTree = "<group>"; };
@@ -155,6 +159,8 @@
 				DFB00C6019C883BB00ABC566 /* Entity.h */,
 				DFB00C6119C883BB00ABC566 /* Entity.m */,
 				DFCE221919C0BCD700BF4128 /* picothru.xcdatamodeld */,
+				AA09432019CA94B200F065D8 /* Entity.h */,
+				AA09432119CA94B200F065D8 /* Entity.m */,
 				DFCE222719C0D39B00BF4128 /* ListTableViewCell.xib */,
 				DFBBE27119BF7228007F65AD /* AppDelegate.h */,
 				DFBBE27219BF7228007F65AD /* AppDelegate.m */,
@@ -252,6 +258,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Masaru;
 				TargetAttributes = {
+					DFBBE25E19BF7228007F65AD = {
+						DevelopmentTeam = GTK63E6JGW;
+					};
 					DFBBE28219BF7229007F65AD = {
 						TestTargetID = DFBBE25E19BF7228007F65AD;
 					};
@@ -338,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA09432219CA94B200F065D8 /* Entity.m in Sources */,
 				DFCE224C19C283F700BF4128 /* CardViewController.m in Sources */,
 				DFBBE27C19BF7228007F65AD /* ViewController.m in Sources */,
 				DFCE225219C28D1D00BF4128 /* Payment.m in Sources */,
@@ -482,10 +492,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "picothru/picothru-Prefix.pch";
 				INFOPLIST_FILE = "picothru/picothru-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -496,10 +509,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "picothru/picothru-Prefix.pch";
 				INFOPLIST_FILE = "picothru/picothru-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -580,9 +596,10 @@
 		DFCE221919C0BCD700BF4128 /* picothru.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				AA09432319CA958B00F065D8 /* picothru 2.xcdatamodel */,
 				DFCE221A19C0BCD700BF4128 /* picothru.xcdatamodel */,
 			);
-			currentVersion = DFCE221A19C0BCD700BF4128 /* picothru.xcdatamodel */;
+			currentVersion = AA09432319CA958B00F065D8 /* picothru 2.xcdatamodel */;
 			path = picothru.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

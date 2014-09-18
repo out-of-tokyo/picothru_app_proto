@@ -50,9 +50,11 @@ int i;
     [fetchrequest setEntity:d];
     NSError *error = nil;
     list = [moc executeFetchRequest:fetchrequest error:&error];
-    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];//[list valueForKeyPath:@"names"];
-    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];//[list valueForKeyPath:@"prices"];
-    
+    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
+    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
+//	names = [list valueForKeyPath:@"names"];
+//    prices = [list valueForKeyPath:@"prices"];
+	
     UINavigationBar *nav = [[UINavigationBar alloc] init];
     nav.frame = CGRectMake(0, -64, 320, 64);
     UINavigationItem* item = [[UINavigationItem alloc] initWithTitle:@"会計確認"];
