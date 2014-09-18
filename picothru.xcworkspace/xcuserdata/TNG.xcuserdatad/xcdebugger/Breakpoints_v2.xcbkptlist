@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "picothru/ViewController.m"
-            timestampString = "432717292.845529"
+            timestampString = "432736742.849147"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "-scanitems2coredata:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

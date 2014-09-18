@@ -90,37 +90,25 @@ NSMutableArray *prodactprice;
     [self.view bringSubviewToFront:_label];
 	
 
-
-    //バーコード値を投げてデータを格納
-    NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=4903326112852"];
-    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-    
-	
-
-    NSLog(@"array = %@",array);
-
-	Scanitems *scanitems = [Scanitems MR_createEntity];
-    scanitems.prodacts = response;
-    scanitems.names = [array valueForKeyPath:@"name"];
-    scanitems.prices = [array valueForKeyPath:@"price"];
-	scanitems.number = [NSNumber numberWithInt:1];;
-
-	//値の代入
-	NSLog(@"scanitems.number = %@",scanitems.number);
-	NSLog(@"scanitems.prices = %@",scanitems.prices);
 	
 	
-	//ラベルの変更
-//	_label.text = [array valueForKeyPath:@"name"];
-//	_label.text = [[array valueForKeyPath:@"price"] stringValue];
-//	_label.text = [[array valueForKeyPath:@"number"] stringValue];
-//	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点",scanitems.names,[scanitems.prices stringValue], [scanitems.number stringValue]];
-
-	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_saveNestedContexts];
+	/////////////データを格納/////////////
+//	[self scanitems2coredata:(@"store_id=1&barcode_id=4903326112852")];
+	[self scanitems2coredata:(@"store_id=2&barcode_id=4903326112853")];
 	
+	////////////////////////////////////
+	
+	/////////////ラベル書き換え(Coredata経由)/////////////
+	[self new_itemlabel];
+	////////////////////////////////////
+
+	
+	
+
+}
+
+- (NSString *)new_itemlabel
+{
 	//Coredata呼び出し
 	id delegate = [[UIApplication sharedApplication] delegate];
 	self.managedObjectContext = [delegate managedObjectContext];
@@ -135,15 +123,53 @@ NSMutableArray *prodactprice;
     list = [moc executeFetchRequest:fetchrequest error:&error_coredata];
 	
 	//呼び出したCoredata分割格納
-	NSString *names = [[list valueForKeyPath:@"names"]objectAtIndex:1];
-	NSString *prices = [[list valueForKeyPath:@"prices"]objectAtIndex:1];
+	//	NSLog(@"list##########%@##########",list);
+	NSString *names = [[list valueForKeyPath:@"names"] objectAtIndex:0];
+	NSString *prices = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+	NSString *number = [[list valueForKeyPath:@"number"] objectAtIndex:0];
+	//	NSString *names = @"hoge";
+	//	NSString *prices = @"foo";
+	//	NSString *number = @"bar";
+	//	NSArray *names = [list valueForKeyPath:@"names"];
+	//	NSArray *prices = [list valueForKeyPath:@"prices"];
+	//	NSArray *number = [list valueForKeyPath:@"number"];
 	
-	NSLog(@"names: %@",names);
-	NSLog(@"prices: %@",prices);
+	//現在スキャン済みとされている商品一覧
+	NSLog(@"names: %@",[[list valueForKeyPath:@"names"] description]);
+	NSLog(@"prices: %@",[[list valueForKeyPath:@"prices"] description]);
+	NSLog(@"number: %@",[[list valueForKeyPath:@"number"] description]);
+	
+	
+	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点", names, prices, number];
 
-	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点",names,prices, [scanitems.number stringValue]];
+	return @"foo";
+}
 
+- (NSString *)scanitems2coredata:(NSString *)queue
+{
+	//バーコード値を投げてデータを格納
+    NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?%@",queue];
 
+    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+	
+    NSLog(@"array = %@",array);
+	
+	//値の代入
+	Scanitems *scanitems = [Scanitems MR_createEntity];
+    scanitems.prodacts = response;
+    scanitems.names = [array valueForKeyPath:@"name"];
+    scanitems.prices = [array valueForKeyPath:@"price"];
+	scanitems.number = [NSNumber numberWithInt:1];;
+	
+	NSLog(@"scanitems.number = %@",scanitems.number);
+	NSLog(@"scanitems.prices = %@",scanitems.prices);
+
+	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_saveNestedContexts];
+	
+	return @"hoge";
 }
 
 
@@ -151,49 +177,45 @@ NSMutableArray *prodactprice;
 
 
 
-
-
-
-
-//- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-//{
-//    CGRect highlightViewRect = CGRectZero;
-//    AVMetadataMachineReadableCodeObject *barCodeObject;
-//    NSString *detectionString = nil;
-//    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
-//                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
-//                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
-//    
-//    for (AVMetadataObject *metadata in metadataObjects) {
-//        for (NSString *type in barCodeTypes) {
-//            if ([metadata.type isEqualToString:type])
-//            {
-//                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
-//                highlightViewRect = barCodeObject.bounds;
-//                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
-//                break;
-//            }
-//        }
-//        
-//        if (detectionString != nil)
-//        {
-//            NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
-//            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-//            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-//            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-//            Scanitems *scanitems = [Scanitems MR_createEntity];
-//            scanitems.prodacts = response;
-//            scanitems.names = [array valueForKeyPath:@"name"];
-//            scanitems.prices = [array valueForKeyPath:@"price"];
-//            _label.text = [array valueForKeyPath:@"name"];
-//            break;
-//        }
-//        else
-//            _label.text = @"(none)";
-//    }
-//    
-//    _highlightView.frame = highlightViewRect;
-//}
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+{
+    CGRect highlightViewRect = CGRectZero;
+    AVMetadataMachineReadableCodeObject *barCodeObject;
+    NSString *detectionString = nil;
+    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
+                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
+                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
+    
+    for (AVMetadataObject *metadata in metadataObjects) {
+        for (NSString *type in barCodeTypes) {
+            if ([metadata.type isEqualToString:type])
+            {
+                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
+                highlightViewRect = barCodeObject.bounds;
+                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
+                break;
+            }
+        }
+        
+        if (detectionString != nil)
+        {
+			NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
+            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+            Scanitems *scanitems = [Scanitems MR_createEntity];
+            scanitems.prodacts = response;
+            scanitems.names = [array valueForKeyPath:@"name"];
+            scanitems.prices = [array valueForKeyPath:@"price"];
+            _label.text = [array valueForKeyPath:@"name"];
+            break;
+        }
+        else
+            _label.text = @"(none)";
+    }
+    
+    _highlightView.frame = highlightViewRect;
+}
 
 -(void)hoge:(UIButton*)button{
     //Scanitems* scanitems = [Scanitems MR_createEntity];

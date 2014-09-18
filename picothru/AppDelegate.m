@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "Webpay.h"
+#import "Entity.h"
 @implementation AppDelegate
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
@@ -17,6 +18,9 @@
 {
     // Override point for customization after application launch.
     [MagicalRecord setupCoreDataStack];
+	[Scanitems MR_truncateAll];
+	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+	[context MR_saveNestedContexts];
     [WPYTokenizer setPublicKey:@"test_public_fdvbxDd9c2VCcftgP6b2o99z"];
     return YES;
 }
