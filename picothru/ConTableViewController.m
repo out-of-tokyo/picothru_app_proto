@@ -180,11 +180,11 @@ int i;
 	 cardinfo = [moc executeFetchRequest:fetchrequest error:&error];
 	 if([cardinfo valueForKeyPath:@"name"], [cardinfo valueForKeyPath:@"number"],[cardinfo valueForKeyPath:@"month"], [cardinfo valueForKeyPath:@"year"],[cardinfo valueForKeyPath:@"cvc"] ){
 	 ;
-	 }
+	 }*/
 	 CardViewController *CardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
-	 [self presentViewController:CardViewController animated:YES completion:nil];*/
-    [self createtoken];
-    [self posttoken];
+	 [self presentViewController:CardViewController animated:YES completion:nil];
+  //  [self createtoken];
+  //  [self posttoken];
 }
 
 - (void)createtoken{
