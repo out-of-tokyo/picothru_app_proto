@@ -107,11 +107,31 @@ NSMutableArray *prodactprice;
 	
 	
 	/////////////queueを作成/////////////
-//	NSString * queue = @"store_id=1&barcode_id=4903326112852";
-	NSString * queue = @"store_id=2&barcode_id=4903326112853";
+	NSString * queue;
+	queue = @"store_id=1&barcode_id=4903326112852";
+	[self barcode2product:(queue)];
+	queue = @"store_id=2&barcode_id=4903326112853";
+	[self barcode2product:(queue)];
 	
+
 	////////////////////////////////////
 	
+	
+	
+	
+	
+	/////////////ラベル書き換え(Coredata経由)/////////////
+//	[self new_itemlabel];
+	////////////////////////////////////
+
+	
+	
+
+}
+
+
+- (NSString *)barcode2product:(NSString *)queue
+{
 	//バーコード値を投げてデータを格納
     NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?%@",queue];
 	
@@ -131,22 +151,15 @@ NSMutableArray *prodactprice;
 	NSLog(@"scanitems.number = %@",scanitems.number);
 	NSLog(@"scanitems.prices = %@",scanitems.prices);
 	
+	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_saveNestedContexts];
+
+	
 	
 	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点", scanitems.names, scanitems.prices, scanitems.number];
 
-
+	return @"hoge";
 	
-	
-	
-	
-	
-	/////////////ラベル書き換え(Coredata経由)/////////////
-//	[self new_itemlabel];
-	////////////////////////////////////
-
-	
-	
-
 }
 
 - (NSString *)new_itemlabel
@@ -244,8 +257,8 @@ NSMutableArray *prodactprice;
     //scanitems.prodacts = itemsData;
     //scanitems.names = nameData;
     //scanitems.prices = priceData;
-	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_saveNestedContexts];
+//	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+//    [context MR_saveNestedContexts];
 
     ConTableViewController *conTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ctv"];
     [self presentViewController:conTableViewController animated:YES completion:nil];

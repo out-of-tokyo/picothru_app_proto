@@ -50,21 +50,23 @@ int i;
     [fetchrequest setEntity:d];
     NSError *error = nil;
     list = [moc executeFetchRequest:fetchrequest error:&error];
-//    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
-//    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
 //	names = [list valueForKeyPath:@"names"];
 //    prices = [list valueForKeyPath:@"prices"];
+    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
+    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
+//	NSLog(@"%@",list);
 	
-	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
-	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
+//	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
+//	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
 
-	NSArray * temp_n = [[list valueForKeyPath:@"names"] objectAtIndex:0];
-	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
-	NSLog(@"%@, %@",temp_n,temp_p);
+//	NSArray * temp_n = [list valueForKeyPath:@"names"];
+//	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+//	NSLog(@"%@, %@",temp_n,temp_p);
 
-    names = [NSArray arrayWithObjects:temp_n, nil];
-    prices = [NSArray arrayWithObjects:temp_p, nil];
+//    names = [NSArray arrayWithObjects:temp_n, nil];
+//    prices = [NSArray arrayWithObjects:temp_p, nil];
 
+//	NSLog(@"name: %@, prices: %@",names,prices);
 	
     UINavigationBar *nav = [[UINavigationBar alloc] init];
     nav.frame = CGRectMake(0, -64, 320, 64);
