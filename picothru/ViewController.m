@@ -163,6 +163,8 @@ NSMutableArray *prodactprice;
     scanitems.prices = [array valueForKeyPath:@"price"];
 	scanitems.number = [NSNumber numberWithInt:1];;
 	
+	
+	
 	NSLog(@"scanitems.number = %@",scanitems.number);
 	NSLog(@"scanitems.prices = %@",scanitems.prices);
 

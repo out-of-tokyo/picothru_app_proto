@@ -23,6 +23,7 @@
 NSArray *list;
 NSArray *names;
 NSArray *prices;
+NSArray *numbers;
 NSInteger total;
 NSArray *cardinfo;
 NSString *tokenid;
@@ -50,10 +51,24 @@ int i;
     [fetchrequest setEntity:d];
     NSError *error = nil;
     list = [moc executeFetchRequest:fetchrequest error:&error];
-    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
-    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
-//	names = [list valueForKeyPath:@"names"];
-//    prices = [list valueForKeyPath:@"prices"];
+    names = [list valueForKeyPath:@"names"];
+    prices = [list valueForKeyPath:@"prices"];
+    numbers = [list valueForKeyPath:@"number"];
+//    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
+//    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
+//	NSLog(@"%@",list);
+	
+//	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
+//	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
+
+//	NSArray * temp_n = [list valueForKeyPath:@"names"];
+//	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+//	NSLog(@"%@, %@",temp_n,temp_p);
+
+//    names = [NSArray arrayWithObjects:temp_n, nil];
+//    prices = [NSArray arrayWithObjects:temp_p, nil];
+
+//	NSLog(@"name: %@, prices: %@",names,prices);
 	
     UINavigationBar *nav = [[UINavigationBar alloc] init];
     nav.frame = CGRectMake(0, -64, 320, 64);
@@ -96,9 +111,8 @@ int i;
 {
 	total = 0;
 	NSLog(@"prices count = %ld",(long)[prices count]);
-    for(i = 0;i < [prices count]; i++) {
-        
-        NSInteger tmp = [prices[i] intValue];
+    for(i = 0;i < [names count]; i++) {
+        NSInteger tmp = [prices[i] integerValue];
 		NSLog(@"tmp = %ld (i = %ld)",(long)tmp,(long)i);
 		NSLog(@"%ld + %ld = %ld",(long)total,(long)tmp,(long)(total+tmp));
         total += tmp;
@@ -141,8 +155,10 @@ int i;
     NSString *cellIdentifier = @"cell";
     ListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell.prodactname.text = names[indexPath.row];
-    cell.prodactprice.text = prices[indexPath.row];
-    cell.prodactcount.text = @"1";
+    NSString *pricestr = [prices[indexPath.row] stringValue];
+    NSString *numberstr = [numbers[indexPath.row] stringValue];
+    cell.prodactprice.text = pricestr;
+    cell.prodactcount.text = numberstr;
     return cell;
 }
 
