@@ -23,6 +23,7 @@
 NSArray *list;
 NSArray *names;
 NSArray *prices;
+NSArray *numbers;
 NSInteger total;
 NSArray *cardinfo;
 NSString *tokenid;
@@ -50,24 +51,25 @@ int i;
     [fetchrequest setEntity:d];
     NSError *error = nil;
     list = [moc executeFetchRequest:fetchrequest error:&error];
-//	names = [list valueForKeyPath:@"names"];
-//    prices = [list valueForKeyPath:@"prices"];
-    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
-    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
-//	NSLog(@"%@",list);
-	
-//	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
-//	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
+    names = [list valueForKeyPath:@"names"];
+    prices = [list valueForKeyPath:@"prices"];
+    numbers = [list valueForKeyPath:@"number"];
+//    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
+//    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
+//  NSLog(@"%@",list);
+    
+//  NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
+//  NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
 
-//	NSArray * temp_n = [list valueForKeyPath:@"names"];
-//	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
-//	NSLog(@"%@, %@",temp_n,temp_p);
+//  NSArray * temp_n = [list valueForKeyPath:@"names"];
+//  NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+//  NSLog(@"%@, %@",temp_n,temp_p);
 
 //    names = [NSArray arrayWithObjects:temp_n, nil];
 //    prices = [NSArray arrayWithObjects:temp_p, nil];
 
-//	NSLog(@"name: %@, prices: %@",names,prices);
-	
+//  NSLog(@"name: %@, prices: %@",names,prices);
+    
     UINavigationBar *nav = [[UINavigationBar alloc] init];
     nav.frame = CGRectMake(0, -64, 320, 64);
     UINavigationItem* item = [[UINavigationItem alloc] initWithTitle:@"会計確認"];
@@ -102,18 +104,17 @@ int i;
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-	[self.tableView registerNib:[UINib nibWithNibName:@"ListTableViewCell" bundle:nil]forCellReuseIdentifier:@"cell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"ListTableViewCell" bundle:nil]forCellReuseIdentifier:@"cell"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-	total = 0;
-	NSLog(@"prices count = %ld",(long)[prices count]);
-    for(i = 0;i < [prices count]; i++) {
-        
-        NSInteger tmp = [prices[i] intValue];
-		NSLog(@"tmp = %ld (i = %ld)",(long)tmp,(long)i);
-		NSLog(@"%ld + %ld = %ld",(long)total,(long)tmp,(long)(total+tmp));
+    total = 0;
+    NSLog(@"prices count = %ld",(long)[prices count]);
+    for(i = 0;i < [names count]; i++) {
+        NSInteger tmp = [prices[i] integerValue];
+        NSLog(@"tmp = %ld (i = %ld)",(long)tmp,(long)i);
+        NSLog(@"%ld + %ld = %ld",(long)total,(long)tmp,(long)(total+tmp));
         total += tmp;
     }
     
@@ -124,11 +125,11 @@ int i;
     goukei.textColor = [UIColor whiteColor];
     goukei.textAlignment = NSTextAlignmentCenter;
     NSString *txt = [NSString stringWithFormat:@"%ld", (long)total];
-	NSLog(@"%ld",(long)total);
+    NSLog(@"%ld",(long)total);
     NSString *totaltxt = [NSString stringWithFormat:@"合計%@円",txt];
     goukei.text = totaltxt ;
     [self.view addSubview: goukei];
-	
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -154,8 +155,10 @@ int i;
     NSString *cellIdentifier = @"cell";
     ListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell.prodactname.text = names[indexPath.row];
-    cell.prodactprice.text = prices[indexPath.row];
-    cell.prodactcount.text = @"1";
+    NSString *pricestr = [prices[indexPath.row] stringValue];
+    NSString *numberstr = [numbers[indexPath.row] stringValue];
+    cell.prodactprice.text = pricestr;
+    cell.prodactcount.text = numberstr;
     return cell;
 }
 
@@ -171,20 +174,20 @@ int i;
 
 -(void)done:(UIButton*)button{
     /*id delegate = [[UIApplication sharedApplication] delegate];
-	 self.managedObjectContext = [delegate managedObjectContext];
-	 NSManagedObjectContext *moc = [self managedObjectContext];
-	 NSFetchRequest *fetchrequest = [[NSFetchRequest alloc] init];
-	 NSEntityDescription *d = [NSEntityDescription entityForName: @"Payment" inManagedObjectContext:_managedObjectContext];
-	 [fetchrequest setEntity:d];
-	 NSError *error = nil;
-	 cardinfo = [moc executeFetchRequest:fetchrequest error:&error];
-	 if([cardinfo valueForKeyPath:@"name"], [cardinfo valueForKeyPath:@"number"],[cardinfo valueForKeyPath:@"month"], [cardinfo valueForKeyPath:@"year"],[cardinfo valueForKeyPath:@"cvc"] ){
-	 ;
-	 }*/
-	 CardViewController *CardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
-	 [self presentViewController:CardViewController animated:YES completion:nil];
-  //  [self createtoken];
-  //  [self posttoken];
+     self.managedObjectContext = [delegate managedObjectContext];
+     NSManagedObjectContext *moc = [self managedObjectContext];
+     NSFetchRequest *fetchrequest = [[NSFetchRequest alloc] init];
+     NSEntityDescription *d = [NSEntityDescription entityForName: @"Payment" inManagedObjectContext:_managedObjectContext];
+     [fetchrequest setEntity:d];
+     NSError *error = nil;
+     cardinfo = [moc executeFetchRequest:fetchrequest error:&error];
+     if([cardinfo valueForKeyPath:@"name"], [cardinfo valueForKeyPath:@"number"],[cardinfo valueForKeyPath:@"month"], [cardinfo valueForKeyPath:@"year"],[cardinfo valueForKeyPath:@"cvc"] ){
+     ;
+     }
+     CardViewController *CardViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
+     [self presentViewController:CardViewController animated:YES completion:nil];*/
+    [self createtoken];
+    [self posttoken];
 }
 
 - (void)createtoken{
@@ -205,7 +208,7 @@ int i;
             NSLog(@"error:%@", [error localizedDescription]);
         }
     }];
-	
+    
 }
 
 - (void)posttoken{
@@ -234,7 +237,7 @@ int i;
         [[UIAlertView alloc] initWithTitle:@"PicoNothru" message:@"エラー" delegate:self cancelButtonTitle:@"確認" otherButtonTitles:nil];
         [alert show];
     }
-	
+    
 }
 
 /*
