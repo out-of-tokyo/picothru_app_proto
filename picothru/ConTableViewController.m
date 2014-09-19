@@ -30,6 +30,7 @@ NSString *tokenid;
 int i;
 
 
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -54,21 +55,21 @@ int i;
     names = [list valueForKeyPath:@"names"];
     prices = [list valueForKeyPath:@"prices"];
     numbers = [list valueForKeyPath:@"number"];
-//    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
-//    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
-//	NSLog(@"%@",list);
+	//    names = [NSArray arrayWithObjects:@"ゴリラのはなくそ", @"ぷりん", @"生しらす", nil];
+	//    prices = [NSArray arrayWithObjects:@"100", @"150", @"50", nil];
+	//	NSLog(@"%@",list);
 	
-//	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
-//	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
-
-//	NSArray * temp_n = [list valueForKeyPath:@"names"];
-//	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
-//	NSLog(@"%@, %@",temp_n,temp_p);
-
-//    names = [NSArray arrayWithObjects:temp_n, nil];
-//    prices = [NSArray arrayWithObjects:temp_p, nil];
-
-//	NSLog(@"name: %@, prices: %@",names,prices);
+	//	NSLog(@"###################names: %@#####################",[list valueForKeyPath:@"names"]);
+	//	NSLog(@"###################prices: %@#####################",[list valueForKeyPath:@"prices"]);
+	
+	//	NSArray * temp_n = [list valueForKeyPath:@"names"];
+	//	NSString * temp_p = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+	//	NSLog(@"%@, %@",temp_n,temp_p);
+	
+	//    names = [NSArray arrayWithObjects:temp_n, nil];
+	//    prices = [NSArray arrayWithObjects:temp_p, nil];
+	
+	//	NSLog(@"name: %@, prices: %@",names,prices);
 	
     UINavigationBar *nav = [[UINavigationBar alloc] init];
     nav.frame = CGRectMake(0, -64, 320, 64);

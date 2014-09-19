@@ -21,6 +21,9 @@
     UIView *_highlightView;
     UILabel *_label;
     UIButton *_button;
+    UIButton *_button2;
+	Scanitems *scanitems;
+	long long scan_barcode[100];
 }
 @end
 
@@ -31,6 +34,9 @@ NSMutableArray *prodactprice;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+
+	
     
     _highlightView = [[UIView alloc] init];
     _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
@@ -38,6 +44,37 @@ NSMutableArray *prodactprice;
     _highlightView.layer.borderWidth = 3;
     [self.view addSubview:_highlightView];
     
+	
+	//カメラ起動してなんかやってる
+    _session = [[AVCaptureSession alloc] init];
+    _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *error = nil;
+    
+    _input = [AVCaptureDeviceInput deviceInputWithDevice:_device error:&error];
+    if (_input) {
+        [_session addInput:_input];
+    } else {
+        NSLog(@"Error: %@", error);
+    }
+    
+    _output = [[AVCaptureMetadataOutput alloc] init];
+    [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+    [_session addOutput:_output];
+    
+    _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
+    
+    _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
+    _prevLayer.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 180);
+    _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer addSublayer:_prevLayer];
+    
+    [_session startRunning];
+    
+    [self.view bringSubviewToFront:_highlightView];
+    [self.view bringSubviewToFront:_label];
+	
+	
+	
 	// スキャン履歴表示ラベル
     _label = [[UILabel alloc] init];
     _label.frame = CGRectMake(0, self.view.bounds.size.height - 120, self.view.bounds.size.width, 40);
@@ -59,52 +96,74 @@ NSMutableArray *prodactprice;
     [_button addTarget:self action:@selector(hoge:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_button];
     
+	//商品を増やすボタンtemp
+	_button2 = [[UIButton alloc] init];
+    _button2.frame = CGRectMake(0, self.view.bounds.size.height - 180, self.view.bounds.size.width, 60);
+    _button2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _button2.backgroundColor = [UIColor greenColor];
+    [ _button2 setTitleColor:[ UIColor whiteColor ] forState:UIControlStateNormal ];
+    [ _button2 setTitle:@"商品を増やす" forState:UIControlStateNormal ];
+    _button2.titleLabel.adjustsFontSizeToFitWidth = YES;
+    [_button2 addTarget:self action:@selector(hoge2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_button2];
     
     
-    //カメラ起動してなんかやってる
-    _session = [[AVCaptureSession alloc] init];
-    _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    NSError *error = nil;
     
-    _input = [AVCaptureDeviceInput deviceInputWithDevice:_device error:&error];
-    if (_input) {
-        [_session addInput:_input];
-    } else {
-        NSLog(@"Error: %@", error);
-    }
-    
-    _output = [[AVCaptureMetadataOutput alloc] init];
-    [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-    [_session addOutput:_output];
-    
-    _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
-    
-    _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
-    _prevLayer.frame = self.view.bounds;
-    _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_prevLayer];
-    
-    [_session startRunning];
-    
-    [self.view bringSubviewToFront:_highlightView];
-    [self.view bringSubviewToFront:_label];
+	
+	/////////////queueを作成/////////////
+//	NSString * queue;
+//	queue = @"store_id=1&barcode_id=4903326112852";
+//	[self barcode2product:(queue)];
+//	queue = @"store_id=2&barcode_id=4903326112853";
+//	[self barcode2product:(queue)];
 	
 
-	
-	
-	/////////////データを格納/////////////
-//	[self scanitems2coredata:(@"store_id=1&barcode_id=4903326112852")];
-	[self scanitems2coredata:(@"store_id=2&barcode_id=4903326112853")];
-	
 	////////////////////////////////////
+	
+	
+	
+	
 	
 	/////////////ラベル書き換え(Coredata経由)/////////////
-	[self new_itemlabel];
+//	[self new_itemlabel];
 	////////////////////////////////////
 
 	
 	
 
+}
+
+
+- (NSString *)barcode2product:(NSString *)queue
+{
+	//バーコード値を投げてデータを格納
+    NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?%@",queue];
+	
+    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+	
+    NSLog(@"array = %@",array);
+	
+	//値の代入
+	scanitems = [Scanitems MR_createEntity];
+    scanitems.prodacts = response;
+    scanitems.names = [array valueForKeyPath:@"name"];
+    scanitems.prices = [array valueForKeyPath:@"price"];
+	scanitems.number = [NSNumber numberWithInt:1];
+	
+	NSLog(@"scanitems.number = %@",scanitems.number);
+	NSLog(@"scanitems.prices = %@",scanitems.prices);
+	
+	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_saveNestedContexts];
+
+	
+	
+	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点", scanitems.names, scanitems.prices, scanitems.number];
+
+	return @"hoge";
+	
 }
 
 - (NSString *)new_itemlabel
@@ -124,9 +183,12 @@ NSMutableArray *prodactprice;
 	
 	//呼び出したCoredata分割格納
 	//	NSLog(@"list##########%@##########",list);
-	NSString *names = [[list valueForKeyPath:@"names"] objectAtIndex:0];
-	NSString *prices = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
-	NSString *number = [[list valueForKeyPath:@"number"] objectAtIndex:0];
+//	NSString *names = [[list valueForKeyPath:@"names"] objectAtIndex:0];
+//	NSString *prices = [[list valueForKeyPath:@"prices"] objectAtIndex:0];
+//	NSString *number = [[list valueForKeyPath:@"number"] objectAtIndex:0];
+	NSString *names = [list valueForKeyPath:@"names"];
+	NSString *prices = [list valueForKeyPath:@"prices"];
+	NSString *number = [list valueForKeyPath:@"number"];
 	//	NSString *names = @"hoge";
 	//	NSString *prices = @"foo";
 	//	NSString *number = @"bar";
@@ -144,38 +206,6 @@ NSMutableArray *prodactprice;
 
 	return @"foo";
 }
-
-- (NSString *)scanitems2coredata:(NSString *)queue
-{
-	//バーコード値を投げてデータを格納
-    NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?%@",queue];
-
-    NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-	
-    NSLog(@"array = %@",array);
-	
-	//値の代入
-	Scanitems *scanitems = [Scanitems MR_createEntity];
-    scanitems.prodacts = response;
-    scanitems.names = [array valueForKeyPath:@"name"];
-    scanitems.prices = [array valueForKeyPath:@"price"];
-	scanitems.number = [NSNumber numberWithInt:1];;
-	
-	
-	
-	NSLog(@"scanitems.number = %@",scanitems.number);
-	NSLog(@"scanitems.prices = %@",scanitems.prices);
-
-	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_saveNestedContexts];
-	
-	return @"hoge";
-}
-
-
-
 
 
 
@@ -201,15 +231,28 @@ NSMutableArray *prodactprice;
         
         if (detectionString != nil)
         {
-			NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
-            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-            Scanitems *scanitems = [Scanitems MR_createEntity];
-            scanitems.prodacts = response;
-            scanitems.names = [array valueForKeyPath:@"name"];
-            scanitems.prices = [array valueForKeyPath:@"price"];
-            _label.text = [array valueForKeyPath:@"name"];
+			NSLog(@"###############barcode: %@#################",detectionString);
+//			NSString *url=[NSString stringWithFormat:@"http://54.64.69.224/api/v0/product?store_id=1&barcode_id=%@", detectionString];
+//            NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+//            NSData * response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+//            NSArray *array = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+//            Scanitems *scanitems = [Scanitems MR_createEntity];
+//            scanitems.prodacts = response;
+//            scanitems.names = [array valueForKeyPath:@"name"];
+//            scanitems.prices = [array valueForKeyPath:@"price"];
+//            _label.text = [array valueForKeyPath:@"name"];
+			
+			detectionString = @"store_id=1&barcode_id=4903326112852";
+//			for(int i=0;i<[scan_barcode count];i++){
+//				
+//				
+//			}
+
+			[self barcode2product:detectionString];
+		
+//			[NSThread sleepForTimeInterval:1.0f];
+			detectionString = nil;
+			
             break;
         }
         else
@@ -227,9 +270,18 @@ NSMutableArray *prodactprice;
     //scanitems.prodacts = itemsData;
     //scanitems.names = nameData;
     //scanitems.prices = priceData;
-    
+//	NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+//    [context MR_saveNestedContexts];
+
     ConTableViewController *conTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ctv"];
     [self presentViewController:conTableViewController animated:YES completion:nil];
+}
+-(void)hoge2:(UIButton*)button{
+	
+    int temp = scanitems.number.intValue+1;
+	scanitems.number = [NSNumber numberWithInt:temp];
+	_label.text = [NSString stringWithFormat:@"%@ %@円 %@点", scanitems.names, scanitems.prices, scanitems.number];
+	
 }
 
 
